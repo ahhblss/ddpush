@@ -31,10 +31,6 @@ public final class ServerMessage{
 		this.data = data;
 	}
 	
-//	public static org.ddpush.im.node.Message getNewInstance(){
-//		return null;
-//	}
-	
 	public void setData(byte[] data){
 		this.data = data;
 	}

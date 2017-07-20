@@ -73,7 +73,9 @@ public class NodeStatus {
 			while(true){
 				bb.clear();
 				bb.limit(file_min_bytes_per_object);
+//				remaining():Returns the number of elements between the current position and the limit
 				while(bb.remaining() >0){
+				    // read():Reads a sequence of bytes from this channel into the given buffer.
 					if(fc.read(bb) < 0){
 						break;
 					}
@@ -82,19 +84,20 @@ public class NodeStatus {
 					break;
 				}
 				bb.flip();
-				String key = new String(entry,0,32);
+				String key = new String(entry,0,32);//uuid
 				for(int i = 0; i < 32; i++){
 					bb.get();
 				}
-				long lastTick = bb.getLong();
-				boolean hasMessage0x10 = (int)bb.get() == 1? true:false;
-				long last0x10Time = bb.getLong();
-				long message0x11 = bb.getLong();
-				long last0x11Time = bb.getLong();
+				long lastTick = bb.getLong();//最后心跳时间
+				boolean hasMessage0x10 = (int)bb.get() == 1? true:false;//是否有通用信息未接收
+				long last0x10Time = bb.getLong();//最后通用信息时间
+
+				long message0x11 = bb.getLong();//最新分类信息通知
+				long last0x11Time = bb.getLong();//最新分类信息通知时间
 				
-				int message0x20Len = bb.getInt();
-				long last0x20Time = bb.getLong();
-				byte[] data0x20 = null;
+				int message0x20Len = bb.getInt();//是否有自定义信息未接收
+				long last0x20Time = bb.getLong();//最新自定义信息时间
+				byte[] data0x20 = null;//最新自定义信息内容
 				if(bb.remaining() >0){
 					break;
 				}

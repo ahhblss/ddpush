@@ -105,6 +105,7 @@ public class NIOPushListener implements Runnable {
 		System.out.println("push listener port:"+this.port);
 		
 		while(!stoped && selector != null){
+			System.out.println("push listener ||");
 			try{
 				handleEvent();
 				handleTimeout();// 处理超时的APPServer连接

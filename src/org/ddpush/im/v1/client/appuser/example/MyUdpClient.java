@@ -58,8 +58,9 @@ public class MyUdpClient extends UDPClientBase {
 	
 	public static void main(String[] args){
 		try{
-			byte[] uuid = StringUtil.md5Byte("0");
-			MyUdpClient myUdpClient = new MyUdpClient(uuid,1,"192.168.2.111",9966);
+//			byte[] uuid = StringUtil.md5Byte("0");
+            byte[] uuid = StringUtil.hexStringToByteArray("2cb1abca847b4491bc2b206b592b64fd");
+			MyUdpClient myUdpClient = new MyUdpClient(uuid,1,"127.0.0.1",9966);
 			myUdpClient.setHeartbeatInterval(50);
 			myUdpClient.start();
 			synchronized(myUdpClient){

@@ -56,7 +56,9 @@ public class ClientStatMachine {
 	
 	private boolean hasMessage0x10 = false;//是否有通用信息未接收
 	private long last0x10Time = -1;//最后通用信息时间
-	
+	/**
+	 * 分类信息至多64种类型，且按位叠加操作（|和&）进行确认
+	 */
 	private long message0x11 = 0;//最新分类信息通知
 	private long last0x11Time = -1;//最新分类信息通知时间
 	

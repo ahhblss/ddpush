@@ -208,17 +208,22 @@ public class PushTask implements Runnable {
 		if(this.writePending == false){
 			if(buffer.position() < Constant.PUSH_MSG_HEADER_LEN){
 				this.writePending = false;
+				//为读完包
 			}else{
+			    //消息内容长度
 				int bodyLen = (int)ByteBuffer.wrap(bufferArray, Constant.PUSH_MSG_HEADER_LEN - 2, 2).getChar();
 				if(bodyLen > maxContentLength){
 					throw new java.lang.IllegalArgumentException("content length "+bodyLen+" larger than max "+maxContentLength);
 				}
 				if(bodyLen == 0){
+				    //内容长度为零可以写了
 					this.writePending = true;
 				}else{
+				    //buffer.limit()代表已经读取的字节数，也就是
 					if(buffer.limit() != Constant.PUSH_MSG_HEADER_LEN + bodyLen){
 						buffer.limit(Constant.PUSH_MSG_HEADER_LEN + bodyLen);
 					}else{
+					    //所有数据已经读完,可以写了
 						if(buffer.position() == Constant.PUSH_MSG_HEADER_LEN + bodyLen){
 							this.writePending = true;
 						}
@@ -227,6 +232,7 @@ public class PushTask implements Runnable {
 			}
 		}else{//this.writePending == true
 			if(buffer.hasRemaining()){
+			    //还没写完
 				this.writePending = true;
 			}else{
 				this.writePending = false;

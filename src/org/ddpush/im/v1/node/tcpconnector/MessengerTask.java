@@ -280,12 +280,5 @@ public class MessengerTask implements Runnable {
 			key.selector().wakeup();
 		}
 	}
-	
-//	private ServerMessage pollInstanceMessage(){
-//		if(this.pendingEvents == null){
-//			return null;
-//		}
-//		return this.pendingEvents.poll();
-//	}
 
 }
