@@ -117,8 +117,8 @@ public class PushTask implements Runnable {
 		try{
 			if(writePending == false){
 				
-				if(key.isReadable()){
-					//read pkg
+				if(key.isReadable()){ // 可读状态
+					//read pkg 读取APPServer推送的信息
 					readReq();
 				}else{
 					// do nothing
@@ -129,7 +129,7 @@ public class PushTask implements Runnable {
 				//
 				//register write ops if not enough buffer
 				//if(key.isWritable()){
-					writeRes();
+					writeRes();//将响应信息发给APPServer
 				//}
 			}
 		}catch(Exception e){
@@ -143,7 +143,11 @@ public class PushTask implements Runnable {
 		key = null;
 
 	}
-	
+
+	/**
+	 * 读取APPServer推送的信息
+	 * @throws Exception
+	 */
 	private void readReq() throws Exception{
 		if(this.writePending == true){
 			return;
@@ -152,11 +156,12 @@ public class PushTask implements Runnable {
 		if(channel.read(buffer) < 0){
 			throw new Exception("end of stream");
 		}
-		if(this.calcWritePending() == false){
+		if(this.calcWritePending() == false){// 判断消息是否接收完毕
 			return;
 		}else{
 			byte res = 0;
 			try{
+                // 读取具体信息, 推送给终端
 				processReq();
 			}catch(Exception e){
 				res = 1;
@@ -164,12 +169,13 @@ public class PushTask implements Runnable {
 			catch(Throwable t){
 				res = -1;
 			}
-			
+
+            // 响应信息信息(0表示成功)
 			buffer.clear();
 			buffer.limit(1);
 			buffer.put(res);
 			buffer.flip();
-			
+            // 注册写事件
 			registerForWrite(key, true);
 			
 		}

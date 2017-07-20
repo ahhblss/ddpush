@@ -79,14 +79,15 @@ public class Messenger implements Runnable {
 		//System.out.println(m.getSocketAddress().getClass().getName());
 		String uuid = m.getUuidHexString();
 		//ClientStatMachine csm = NodeStatus.getInstance().getClientStat(uuid);
-		ClientStatMachine csm = nodeStat.getClientStat(uuid);
+		ClientStatMachine csm = nodeStat.getClientStat(uuid);// 查找内存中的状态机
 		if(csm == null){//
-			csm = ClientStatMachine.newByClientTick(m);
+			csm = ClientStatMachine.newByClientTick(m);/// 创建状态机
 			if(csm == null){
 				return;
 			}
 			nodeStat.putClientStat(uuid, csm);
 		}
+		// 查找是否有消息发送给终端
 		ArrayList<ServerMessage> smList = csm.onClientMessage(m);
 		if(smList == null){
 			return;
