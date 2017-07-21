@@ -55,6 +55,7 @@ public class Receiver implements Runnable{
 		address = null;
 		buffer.clear();
 		try{
+			//阻塞接收消息
 			address = this.channel.receive(buffer);
 		}catch(SocketTimeoutException timeout){
 			
