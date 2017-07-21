@@ -45,10 +45,7 @@ public class UdpConnector {
 		antenna.configureBlocking(false);
 		antenna.socket().setReceiveBufferSize(1024*1024*PropertyUtil.getPropertyInt("CLIENT_UDP_BUFFER_RECEIVE"));
 		antenna.socket().setSendBufferSize(1024*1024*PropertyUtil.getPropertyInt("CLIENT_UDP_BUFFER_SEND"));
-		System.out.println("udp connector recv buffer size:"+antenna.socket().getReceiveBufferSize());
-		System.out.println("udp connector send buffer size:"+antenna.socket().getSendBufferSize());
-		
-		
+
 		this.receiver = new Receiver(antenna);
 		this.receiver.init();
 		this.sender = new Sender(antenna);
@@ -63,11 +60,13 @@ public class UdpConnector {
 		receiver.stop();
 		sender.stop();
 		try{
+			//Waits for this thread to die
 			receiverThread.join();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		try{
+            //Waits for this thread to die
 			senderThread.join();
 		}catch(Exception e){
 			e.printStackTrace();

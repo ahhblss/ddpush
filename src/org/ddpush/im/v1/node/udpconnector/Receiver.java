@@ -42,12 +42,7 @@ public class Receiver implements Runnable{
 	public void run(){
 		while(!this.stoped){
 			try{
-				//synchronized(enQueSignal){
-					processMessage();
-				//	if(mq.isEmpty() == true){
-				//		enQueSignal.wait();
-				//	}
-				//}
+				processMessage();
 			}catch(Exception e){
 				e.printStackTrace();
 			}catch(Throwable t){
@@ -73,14 +68,13 @@ public class Receiver implements Runnable{
 			return;
 		}
 		
-		buffer.flip();
-		byte[] swap = new byte[buffer.limit() - buffer.position()];
+		buffer.flip();//buffer.position =0;buffer.limit:数据的长度
+		byte[] swap = new byte[buffer.limit() - buffer.position()];//message length
 		System.arraycopy(buffer.array(), buffer.position(), swap, 0, swap.length);
 
 		ClientMessage m = new ClientMessage(address,swap);
 		
 		enqueue(m);
-		//System.out.println(DateTimeUtil.getCurDateTime()+" r:"+StringUtil.convert(m.getData())+" from:"+m.getSocketAddress().toString());
 
 	}
 	

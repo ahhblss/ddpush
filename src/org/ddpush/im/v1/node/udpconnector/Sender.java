@@ -68,7 +68,6 @@ public class Sender implements Runnable{
 		buffer.put(pendingMessage.getData());
 		buffer.flip();
 		channel.send(buffer, pendingMessage.getSocketAddress());
-		//System.out.println(DateTimeUtil.getCurDateTime()+" s:"+StringUtil.convert(pendingMessage.getData())+" to  :"+pendingMessage.getSocketAddress().toString());
 	}
 	
 	protected boolean enqueue(ServerMessage message){
