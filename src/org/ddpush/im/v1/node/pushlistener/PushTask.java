@@ -105,13 +105,16 @@ public class PushTask implements Runnable {
 	@Override
 	public synchronized void run() {
 		if(listener == null || channel == null){
+            System.out.println("listener == null || channel == null");
 			return;
 		}
 		
 		if(key == null){
+            System.out.println("key == null");
 			return;
 		}
 		if(isCancel == true){
+            System.out.println("isCancel == true");
 			return;
 		}
 		try{
@@ -119,18 +122,15 @@ public class PushTask implements Runnable {
 				
 				if(key.isReadable()){ // 可读状态
 					//read pkg 读取APPServer推送的信息
+                    System.out.println(this.toString()+" read one time by "+Thread.currentThread().getName());
 					readReq();
 				}else{
 					// do nothing
 				}
-			}else{//has package
-				
-				// try send pkg and place hasPkg=false
-				//
-				//register write ops if not enough buffer
-				//if(key.isWritable()){
+			}else{
+
 					writeRes();//将响应信息发给APPServer
-				//}
+
 			}
 		}catch(Exception e){
 			cancelKey(key);
@@ -152,11 +152,12 @@ public class PushTask implements Runnable {
 		if(this.writePending == true){
 			return;
 		}
-		
-		if(channel.read(buffer) < 0){
+		int readBytes = 0;
+		if((readBytes = channel.read(buffer)) < 0){
 			throw new Exception("end of stream");
 		}
-		if(this.calcWritePending() == false){// 判断消息是否接收完毕
+        System.out.println("read bytes :"+readBytes);
+        if(this.calcWritePending() == false){// 判断消息是否接收完毕
 			return;
 		}else{
 			byte res = 0;
@@ -219,7 +220,8 @@ public class PushTask implements Runnable {
 				    //内容长度为零可以写了
 					this.writePending = true;
 				}else{
-				    //buffer.limit()代表已经读取的字节数，也就是
+				    //buffer.limit默认值为Constant.PUSH_MSG_HEADER_LEN
+				    //消息内容长度不为零时buffer.limit=Constant.PUSH_MSG_HEADER_LEN + bodyLen;
 					if(buffer.limit() != Constant.PUSH_MSG_HEADER_LEN + bodyLen){
 						buffer.limit(Constant.PUSH_MSG_HEADER_LEN + bodyLen);
 					}else{

@@ -102,8 +102,7 @@ public class NIOPushListener implements Runnable {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		System.out.println("push listener port:"+this.port);
-		
+
 		while(!stoped && selector != null){
 			System.out.println("push listener ||");
 			try{
@@ -193,9 +192,6 @@ public class NIOPushListener implements Runnable {
         		continue;
         	}
         	try{
-//        		if(key.interestOps() != 0){
-//        			continue;
-//        		}
         		PushTask task = (PushTask)key.attachment();
         		if(task == null){
         			cancelKey(key);
@@ -211,7 +207,6 @@ public class NIOPushListener implements Runnable {
 	}
 	
 	private void handleChannel() throws Exception{
-		System.out.println("start handle channel");
 		if(selector.select() == 0){
 			try{
 				Thread.sleep(1);
@@ -221,14 +216,12 @@ public class NIOPushListener implements Runnable {
 			}
 			return;
 		}
-        System.out.println("start selector");
         Iterator<SelectionKey> it = selector.selectedKeys().iterator();
 		 while (it.hasNext()) {
              SelectionKey key = it.next();
              it.remove();
-             // Is a new connection coming in? APPServer新连接到达
+             // APPServer新连接到达
              if (key.isAcceptable()) {
-                 System.out.println("key is accepted");
                  try{
 	                 ServerSocketChannel server = (ServerSocketChannel) key.channel();
 	                 SocketChannel channel = server.accept();
@@ -239,13 +232,14 @@ public class NIOPushListener implements Runnable {
 	                 PushTask task = new PushTask(this, channel);
                      // 像Selector注册读通道
 	                 channel.register(selector,SelectionKey.OP_READ, task);
+					 System.out.println("a new connection");
             	 }catch(Exception e){
             		 e.printStackTrace();
             	 }
              }
              
              if (key.isReadable() || key.isWritable()) {
-                 System.out.println("key is read or write");
+
                  try{
                 	 PushTask task = (PushTask)key.attachment();
                 	 if(task == null){//this should never happen
@@ -253,7 +247,10 @@ public class NIOPushListener implements Runnable {
                 		 continue;
                 	 }
                 	 task.setKey(key);
+                	 //execute(task):executes the given command at some time in the future
                 	 executor.execute(task);
+                     System.out.println("==========executor num:"+((ThreadPoolExecutor)executor).getTaskCount());
+                     System.out.println((key.isReadable()?"key for read":"key for write")+"=======执行task:"+task.toString());
                  }catch(Exception e){
                 	 e.printStackTrace();
                  }

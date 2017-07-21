@@ -85,11 +85,13 @@ public class IMServerConsole implements Runnable {
                 e.printStackTrace();
                 ch = -1;
             }
+            System.out.println("ch"+(char) ch);
             if (ch < 32)  // Control character or EOF terminates loop
                 break;
             command.append((char) ch);
             maxLen--;
-        }
+
+		}
         String cmd = command.toString().trim();
         
         if(cmd.equals(CMD_SHUTDOWN)){

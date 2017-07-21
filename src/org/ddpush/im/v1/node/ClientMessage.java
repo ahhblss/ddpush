@@ -116,9 +116,5 @@ public final class ClientMessage{
 		
 		return true;
 	}
-	
-//	public byte[] getUUID(){
-//		return 
-//	}
 
 }

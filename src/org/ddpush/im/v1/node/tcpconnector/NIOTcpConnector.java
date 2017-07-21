@@ -199,9 +199,6 @@ public class NIOTcpConnector implements Runnable {
         		continue;
         	}
         	try{
-//        		if(key.interestOps() != 0){
-//        			continue;
-//        		}
         		MessengerTask task = (MessengerTask)key.attachment();
         		if(task == null){
         			cancelKey(key);
@@ -230,7 +227,6 @@ public class NIOTcpConnector implements Runnable {
 		 while (it.hasNext()) {
              SelectionKey key = it.next();
              it.remove();
-             // Is a new connection coming in?
              if (key.isAcceptable()) {
             	 try{
 	                 ServerSocketChannel server = (ServerSocketChannel) key.channel();
